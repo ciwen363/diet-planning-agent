@@ -3,31 +3,65 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Diet Planning Agent</title>
+    <title>饮食推荐助手</title>
     <link rel="stylesheet" href="./assets/css/app.css">
 </head>
 <body>
+<a class="skip-link" href="#app">跳到主要内容</a>
+
 <div class="app-shell">
-    <header class="topbar">
-        <a class="brand" href="#/diet" aria-label="回到智能餐食规划助手首页">
-            <span class="brand-mark">D</span>
-            <span>
-                    <strong>智能餐食规划助手</strong>
-                    <small>根据当下状态，规划更合适的一餐</small>
-                </span>
+    <header class="topbar" aria-label="应用导航">
+        <a class="brand" href="#/diet" aria-label="回到饮食助手首页">
+            <span class="brand-mark" aria-hidden="true">D</span>
+            <span class="brand-copy">
+                <strong>Diet Agent</strong>
+                <small>饮食推荐助手</small>
+            </span>
         </a>
-        <nav class="nav-links" aria-label="主导航">
+
+        <button class="icon-button menu-toggle" type="button" data-chrome-action="toggle-menu"
+                aria-label="打开导航" aria-controls="siteNav" aria-expanded="false">
+            <span aria-hidden="true">☰</span>
+        </button>
+
+        <nav id="siteNav" class="nav-links" aria-label="主导航">
             <a href="#/diet" data-nav="/diet">首页</a>
             <a href="#/diet/chat" data-nav="/diet/chat">聊天推荐</a>
-            <a href="#/diet/meals/personal" data-nav="/diet/meals/personal">个人餐食</a>
+            <a href="#/diet/meals/personal" data-nav="/diet/meals/personal">我的餐食</a>
             <a href="#/diet/meals/public" data-nav="/diet/meals/public">公共餐食</a>
-            <a href="#/admin/traces" data-nav="/admin/traces">Trace</a>
-            <a href="#/admin/evaluations" data-nav="/admin/evaluations">评估</a>
         </nav>
-        <label class="user-field">
-            <span>用户 ID</span>
-            <input id="userIdInput" type="number" min="1" value="1">
-        </label>
+
+        <div class="topbar-actions">
+            <div class="menu-root">
+                <button id="toolsMenuButton" class="btn ghost compact" type="button"
+                        data-chrome-action="toggle-tools" aria-haspopup="menu" aria-expanded="false">
+                    研发工具
+                </button>
+                <div id="toolsMenu" class="floating-menu hidden" role="menu" aria-labelledby="toolsMenuButton">
+                    <a href="#/admin/traces" data-nav="/admin/traces" role="menuitem">Trace 排查</a>
+                    <a href="#/admin/evaluations" data-nav="/admin/evaluations" role="menuitem">批量评估</a>
+                </div>
+            </div>
+
+            <div class="menu-root">
+                <button id="settingsButton" class="user-button" type="button"
+                        data-chrome-action="toggle-settings" aria-haspopup="dialog" aria-expanded="false">
+                    <span>用户</span>
+                    <strong id="currentUserId">1</strong>
+                </button>
+                <div id="settingsPanel" class="settings-panel hidden" role="dialog" aria-labelledby="settingsTitle">
+                    <h2 id="settingsTitle">体验设置</h2>
+                    <form id="settingsForm" class="settings-form">
+                        <label class="field compact-field" for="userIdInput">
+                            <span>用户 ID</span>
+                            <input id="userIdInput" type="number" min="1" value="1">
+                        </label>
+                        <button class="btn primary compact" type="submit">应用</button>
+                    </form>
+                    <p class="muted small">会通过 X-User-Id 传给后端，并保存在当前浏览器。</p>
+                </div>
+            </div>
+        </div>
     </header>
 
     <main id="app" class="page" tabindex="-1"></main>
