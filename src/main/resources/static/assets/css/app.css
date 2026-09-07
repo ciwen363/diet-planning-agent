@@ -1,27 +1,27 @@
 :root {
-    --bg: #f7f5f1;
-    --bg-soft: #fbfaf7;
-    --surface: #fffdf9;
-    --surface-muted: #f2efe8;
-    --surface-green: #eaf5ef;
-    --primary: #2f8068;
-    --primary-dark: #1e604d;
-    --primary-soft: #dcefe7;
-    --accent: #c27a32;
-    --accent-soft: #f7ead7;
-    --text: #232522;
-    --muted: #68716c;
-    --subtle: #89928e;
-    --border: #ded8cc;
-    --border-strong: #c9c1b4;
+    --bg: #f4f7f9;
+    --bg-soft: #f9fbfc;
+    --surface: #ffffff;
+    --surface-muted: #eef3f6;
+    --surface-green: #eaf8f3;
+    --primary: #22b38a;
+    --primary-dark: #13775e;
+    --primary-soft: #ddf6ee;
+    --accent: #2f80ed;
+    --accent-soft: #e8f2ff;
+    --text: #1f2933;
+    --muted: #64717c;
+    --subtle: #8a96a1;
+    --border: #dde5ea;
+    --border-strong: #c9d4dc;
     --danger: #b42318;
     --danger-soft: #fbe4e2;
-    --warning: #98690c;
-    --warning-soft: #f8edcf;
-    --success: #28755f;
+    --warning: #9a6700;
+    --warning-soft: #fff4d6;
+    --success: #168466;
     --success-soft: #dff2e9;
     --focus: #1d6fd1;
-    --shadow: 0 16px 38px rgba(56, 48, 36, 0.10);
+    --shadow: 0 16px 38px rgba(31, 41, 51, 0.08);
     --radius-lg: 16px;
     --radius-md: 12px;
     --radius-sm: 8px;
@@ -46,7 +46,7 @@ body {
     min-width: 0;
     min-height: 100vh;
     color: var(--text);
-    background: linear-gradient(180deg, var(--bg-soft) 0%, var(--bg) 100%);
+    background: linear-gradient(180deg, #fbfdfe 0%, var(--bg) 100%);
     font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", Arial, sans-serif;
     line-height: 1.5;
 }
@@ -111,10 +111,10 @@ select:disabled {
     gap: var(--space-3);
     align-items: center;
     padding: 12px 14px;
-    border: 1px solid rgba(222, 216, 204, 0.88);
+    border: 1px solid rgba(221, 229, 234, 0.92);
     border-radius: var(--radius-lg);
-    background: rgba(255, 253, 249, 0.94);
-    box-shadow: 0 10px 26px rgba(56, 48, 36, 0.08);
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 10px 28px rgba(31, 41, 51, 0.07);
     backdrop-filter: blur(16px);
 }
 
@@ -300,25 +300,24 @@ select:disabled {
 
 .home-kcal {
     display: grid;
-    min-width: 128px;
-    min-height: 128px;
-    place-items: center;
-    align-content: center;
-    gap: 2px;
-    border: 10px solid #dcefe7;
-    border-left-color: var(--primary);
-    border-radius: 50%;
-    background: #fff;
+    min-width: 178px;
+    gap: 6px;
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, #ffffff 0%, #f5fbf8 100%);
 }
 
-.home-kcal span {
+.home-kcal span,
+.home-kcal small {
     color: var(--muted);
     font-size: 13px;
 }
 
 .home-kcal strong {
-    font-size: 34px;
-    line-height: 1;
+    color: var(--primary-dark);
+    font-size: 30px;
+    line-height: 1.1;
 }
 
 .summary-strip {
@@ -334,7 +333,7 @@ select:disabled {
     padding: var(--space-3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    background: var(--bg-soft);
+    background: #fff;
 }
 
 .summary-item span,
@@ -517,7 +516,7 @@ select:disabled {
     padding: var(--space-3);
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
-    background: var(--bg-soft);
+    background: #fff;
 }
 
 .step strong {
@@ -555,6 +554,11 @@ select:disabled {
 .btn.soft {
     color: var(--primary-dark);
     background: var(--primary-soft);
+}
+
+.btn.accent {
+    color: #fff;
+    background: var(--accent);
 }
 
 .btn.ghost {
@@ -774,7 +778,7 @@ button.chip:hover {
 }
 
 .message.assistant.clarify .bubble {
-    border-color: #d8c49e;
+    border-color: #b7d2ef;
     background: var(--accent-soft);
 }
 
@@ -843,8 +847,8 @@ button.chip:hover {
     padding: var(--space-3);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    background: rgba(255, 253, 249, 0.96);
-    box-shadow: 0 12px 30px rgba(56, 48, 36, 0.10);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 30px rgba(31, 41, 51, 0.09);
 }
 
 .composer textarea {
@@ -896,7 +900,7 @@ button.chip:hover {
 
 .notice {
     padding: var(--space-3);
-    border-color: #ead9ab;
+    border-color: #ead086;
     background: var(--warning-soft);
     color: #5b4315;
 }
@@ -1215,13 +1219,11 @@ code {
     }
 
     .home-kcal {
-        min-width: 96px;
-        min-height: 96px;
-        border-width: 8px;
+        min-width: 0;
     }
 
     .home-kcal strong {
-        font-size: 28px;
+        font-size: 26px;
     }
 
     .page-title,

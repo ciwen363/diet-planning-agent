@@ -261,8 +261,9 @@
                             <p>说出时间、心情、口味或健康目标，助手会补齐关键信息，再给出可解释推荐。</p>
                         </div>
                         <div class="home-kcal" aria-label="当前推荐上下文">
-                            <span>用户</span>
+                            <span>体验用户</span>
                             <strong>${escapeHtml(DietApi.getUserId())}</strong>
+                            <small>X-User-Id</small>
                         </div>
                     </div>
 
