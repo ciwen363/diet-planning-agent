@@ -509,7 +509,7 @@
                 <button class="btn primary" type="submit" ${state.chat.sending ? "disabled" : ""}>
                     ${state.chat.sending ? "处理中..." : "发送"}
                 </button>
-                <p id="chatStatus" class="composer-status">${state.chat.sending ? "正在理解你的需求，本轮完成前不会重复提交。" : "Enter 可换行，点击发送开始本轮推荐。"}</p>
+                <p id="chatStatus" class="composer-status">${state.chat.sending ? "正在理解你的需求，本轮完成前不会重复提交。" : "Enter 发送，Shift + Enter 换行。"}</p>
             </form>
         `;
     }
@@ -1852,6 +1852,25 @@
     }
 
     function handleKeydown(event) {
+        if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
+            const target = event.target;
+            if (target && target.id === "chatMessage") {
+                const form = target.closest("#chatForm");
+                if (form) {
+                    event.preventDefault();
+                    state.chat.draft = target.value;
+                    if (state.chat.sending) {
+                        return;
+                    }
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return;
+                    }
+                    form.requestSubmit();
+                    return;
+                }
+            }
+        }
         if (event.key === "Escape") {
             closeChrome();
         }
