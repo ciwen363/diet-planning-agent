@@ -252,34 +252,67 @@
 
     function renderHome() {
         app.innerHTML = `
-            <section class="hero">
-                <div class="hero-panel">
-                    <p class="eyebrow">在线反馈学习与跨会话个性化</p>
-                    <h1>把“今天吃什么”变成可追踪、可反馈的推荐流程</h1>
-                    <p>从一句自然语言开始，系统会识别需求、补齐关键信息，再基于个人餐食库或公共餐食库给出可解释推荐。每轮结果都能反馈，后续推荐会围绕用户偏好持续收敛。</p>
+            <section class="home-workbench">
+                <div class="section home-primary">
+                    <div class="page-title">
+                        <div>
+                            <p class="eyebrow">今日推荐</p>
+                            <h1>今天想吃什么？</h1>
+                            <p>说出时间、心情、口味或健康目标，助手会补齐关键信息，再给出可解释推荐。</p>
+                        </div>
+                        <div class="home-kcal" aria-label="当前推荐上下文">
+                            <span>用户</span>
+                            <strong>${escapeHtml(DietApi.getUserId())}</strong>
+                        </div>
+                    </div>
+
+                    <div class="summary-strip" aria-label="餐食库概览">
+                        ${summaryItem("个人库", homeStatValue("personal"), "用于 PERSONAL 推荐")}
+                        ${summaryItem("公共库", homeStatValue("public"), "用于快速体验")}
+                        ${summaryItem("反馈闭环", "可用", "推荐结果可继续反馈")}
+                    </div>
+
                     <div class="hero-actions">
                         <a class="btn primary" href="#/diet/chat">开始推荐</a>
                         <a class="btn ghost" href="#/diet/meals/personal">维护我的餐食</a>
-                    </div>
-                    <div class="steps" aria-label="推荐流程">
-                        ${stepCard("1", "说需求", "说出用餐时间、心情、口味或健康目标。")}
-                        ${stepCard("2", "补条件", "信息不足时，助手只追问缺失的关键槽位。")}
-                        ${stepCard("3", "给推荐", "展示匹配餐食，并支持有用或不合适反馈。")}
+                        <a class="btn ghost" href="#/diet/meals/public">查看公共餐食</a>
                     </div>
                 </div>
+
                 <aside class="grid stats">
-                    ${statCard("个人餐食", homeStatValue("personal"), "当前用户可用于个性化推荐的餐食数量", state.home.error)}
-                    ${statCard("公共餐食", homeStatValue("public"), "系统预置餐食，可用于快速体验", state.home.error)}
-                    ${statCard("当前用户", DietApi.getUserId(), "请求会自动携带 X-User-Id")}
+                    <div class="section home-flow">
+                        <h2>推荐流程</h2>
+                        ${stepCard("1", "说需求", "描述这一餐的基本想法。")}
+                        ${stepCard("2", "补条件", "缺少关键槽位时先追问。")}
+                        ${stepCard("3", "给推荐", "展示餐食并接收反馈。")}
+                    </div>
+                    <div class="section home-dev">
+                        <h2>研发工具</h2>
+                        <p class="muted">Trace 与评估功能仍保留，用于排查和迭代。</p>
+                        <div class="button-row">
+                            <a class="btn ghost compact" href="#/admin/traces">Trace</a>
+                            <a class="btn ghost compact" href="#/admin/evaluations">评估</a>
+                        </div>
+                    </div>
                 </aside>
             </section>
-            <section class="grid three" style="margin-top: 24px;">
+            <section class="grid three home-feature-grid">
                 ${featureCard("聊天推荐", "按自然语言表达需求，页面会展示澄清、推荐和反馈状态。", "#/diet/chat")}
                 ${featureCard("我的餐食", "维护常吃餐食和标签，让 PERSONAL 模式更贴近个人偏好。", "#/diet/meals/personal")}
                 ${featureCard("研发工具", "Trace 与批量评估保留在研发入口，用于排查和迭代。", "#/admin/traces")}
             </section>
         `;
         loadHomeStats();
+    }
+
+    function summaryItem(label, value, desc) {
+        return `
+            <div class="summary-item">
+                <span>${escapeHtml(label)}</span>
+                <strong>${escapeHtml(value)}</strong>
+                <small>${escapeHtml(desc)}</small>
+            </div>
+        `;
     }
 
     function homeStatValue(type) {
@@ -486,8 +519,7 @@
 
         const mealCards = (message.meals || []).map((meal) => renderMealCard(meal, {
             feedback: true,
-            sessionId: message.sessionId,
-            responseText: message.text
+            sessionId: message.sessionId
         })).join("");
         const missingSlots = renderMissingSlots(message.missingSlots || []);
         const label = message.role === "user" ? "你" : assistantLabel(message);

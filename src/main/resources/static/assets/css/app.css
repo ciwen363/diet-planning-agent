@@ -107,7 +107,7 @@ select:disabled {
     top: 16px;
     z-index: 30;
     display: grid;
-    grid-template-columns: auto 44px minmax(420px, 1fr) auto;
+    grid-template-columns: auto minmax(420px, 1fr) auto;
     gap: var(--space-3);
     align-items: center;
     padding: 12px 14px;
@@ -255,8 +255,16 @@ select:disabled {
     background: #fff;
 }
 
+.topbar .menu-toggle {
+    display: none;
+}
+
 .page {
     padding-top: var(--space-5);
+}
+
+.page:focus {
+    outline: none;
 }
 
 .hero {
@@ -264,6 +272,100 @@ select:disabled {
     grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
     gap: var(--space-4);
     align-items: stretch;
+}
+
+.home-workbench {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+    gap: var(--space-4);
+    align-items: start;
+}
+
+.home-primary {
+    min-height: 360px;
+}
+
+.home-primary .page-title {
+    align-items: center;
+}
+
+.home-primary h1 {
+    font-size: 34px;
+}
+
+.home-primary .page-title p:not(.eyebrow) {
+    max-width: 680px;
+    font-size: 16px;
+}
+
+.home-kcal {
+    display: grid;
+    min-width: 128px;
+    min-height: 128px;
+    place-items: center;
+    align-content: center;
+    gap: 2px;
+    border: 10px solid #dcefe7;
+    border-left-color: var(--primary);
+    border-radius: 50%;
+    background: #fff;
+}
+
+.home-kcal span {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.home-kcal strong {
+    font-size: 34px;
+    line-height: 1;
+}
+
+.summary-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-5) 0 var(--space-4);
+}
+
+.summary-item {
+    display: grid;
+    gap: 5px;
+    padding: var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-soft);
+}
+
+.summary-item span,
+.summary-item small {
+    color: var(--muted);
+}
+
+.summary-item strong {
+    color: var(--text);
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+.home-flow {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.home-flow h2,
+.home-dev h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.home-dev {
+    display: grid;
+    gap: var(--space-2);
+}
+
+.home-feature-grid {
+    margin-top: var(--space-4);
 }
 
 .hero-panel,
@@ -1017,20 +1119,20 @@ code {
 
 @media (max-width: 1180px) {
     .topbar {
-        grid-template-columns: auto 44px 1fr;
+        grid-template-columns: auto minmax(0, 1fr) auto;
     }
 
     .topbar-actions {
-        grid-column: 3;
+        grid-column: auto;
     }
 
     .nav-links {
-        grid-column: 1 / -1;
-        justify-content: flex-start;
-        order: 4;
+        grid-column: auto;
+        justify-content: center;
     }
 
     .hero,
+    .home-workbench,
     .chat-layout,
     .split,
     .split.wide-detail {
@@ -1055,8 +1157,11 @@ code {
     }
 
     .menu-toggle {
-        display: inline-grid;
         justify-self: end;
+    }
+
+    .topbar .menu-toggle {
+        display: inline-grid;
     }
 
     .nav-links {
@@ -1101,6 +1206,24 @@ code {
         font-size: 28px;
     }
 
+    .home-primary h1 {
+        font-size: 30px;
+    }
+
+    .home-primary .page-title {
+        align-items: start;
+    }
+
+    .home-kcal {
+        min-width: 96px;
+        min-height: 96px;
+        border-width: 8px;
+    }
+
+    .home-kcal strong {
+        font-size: 28px;
+    }
+
     .page-title,
     .card-title,
     .meal-card header,
@@ -1111,6 +1234,7 @@ code {
 
     .grid.two,
     .grid.three,
+    .summary-strip,
     .steps,
     .form-grid {
         grid-template-columns: 1fr;
