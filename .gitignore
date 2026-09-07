@@ -3,15 +3,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-# Local configuration and runtime output
-.env
-.env.*
-!.env.example
-*.log
-logs/
-
 ### IntelliJ IDEA ###
 .idea/
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
 *.iws
 *.iml
 *.ipr
@@ -40,3 +37,15 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Codex / local assistant state ###
+.codex/
+
+### Local runtime config ###
+.env
+.env.*
+!.env.example
+application-local.yml
+src/main/resources/application-local.yml
+*.log
+logs/

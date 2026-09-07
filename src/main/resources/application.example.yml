@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: diet-planning-agent
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/diet_db?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.diet.model
+  configuration:
+    map-underscore-to-camel-case: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+agentscope:
+  dashscope:
+    api-key: ${DASHSCOPE_API_KEY:}
+
+diet:
+  llm:
+    main-model: ${DIET_MAIN_MODEL:qwen-max}
+    light-model: ${DIET_LIGHT_MODEL:qwen-turbo}
+  session:
+    max-history-turns: ${DIET_SESSION_MAX_HISTORY_TURNS:10}
+
+logging:
+  level:
+    com.diet: INFO
