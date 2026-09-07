@@ -39,6 +39,8 @@
         "换一批，不想吃刚才那些",
         "我胃不舒服，应该吃什么"
     ];
+    const DEFAULT_CHAT_SUGGESTION = "今晚想吃清淡一点，最好快手一点";
+    const CHAT_AUTOCOMPLETE_MESSAGES = [DEFAULT_CHAT_SUGGESTION, ...QUICK_MESSAGES];
 
     const METRIC_LABELS = {
         intentAccuracy: "意图准确率",
@@ -504,12 +506,12 @@
             <form id="chatForm" class="composer">
                 <label class="sr-only" for="chatMessage">输入饮食需求</label>
                 <textarea id="chatMessage" name="message" rows="2"
-                          placeholder="例如：今晚想吃清淡一点，最好快手一点"
+                          placeholder="例如：${DEFAULT_CHAT_SUGGESTION}"
                           aria-describedby="chatStatus" required>${escapeHtml(state.chat.draft)}</textarea>
                 <button class="btn primary" type="submit" ${state.chat.sending ? "disabled" : ""}>
                     ${state.chat.sending ? "处理中..." : "发送"}
                 </button>
-                <p id="chatStatus" class="composer-status">${state.chat.sending ? "正在理解你的需求，本轮完成前不会重复提交。" : "Enter 发送，Shift + Enter 换行。"}</p>
+                <p id="chatStatus" class="composer-status">${state.chat.sending ? "正在理解你的需求，本轮完成前不会重复提交。" : "Tab 补全示例，Enter 发送，Shift + Enter 换行。"}</p>
             </form>
         `;
     }
@@ -1852,9 +1854,16 @@
     }
 
     function handleKeydown(event) {
-        if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
-            const target = event.target;
-            if (target && target.id === "chatMessage") {
+        const target = event.target;
+        if (target && target.id === "chatMessage") {
+            if (event.key === "Tab" && !event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey) {
+                if (completeChatSuggestion(target)) {
+                    event.preventDefault();
+                    return;
+                }
+            }
+
+            if (event.key === "Enter" && !event.shiftKey && !event.isComposing && event.keyCode !== 229) {
                 const form = target.closest("#chatForm");
                 if (form) {
                     event.preventDefault();
@@ -1874,6 +1883,33 @@
         if (event.key === "Escape") {
             closeChrome();
         }
+    }
+
+    function completeChatSuggestion(input) {
+        const current = input.value.trim();
+        const completion = findChatCompletion(current);
+        if (!completion || completion === current) {
+            return false;
+        }
+        input.value = completion;
+        state.chat.draft = completion;
+        input.setSelectionRange(completion.length, completion.length);
+        return true;
+    }
+
+    function findChatCompletion(current) {
+        if (!current) {
+            return DEFAULT_CHAT_SUGGESTION;
+        }
+        const normalizedCurrent = normalizeCompletionText(current);
+        return CHAT_AUTOCOMPLETE_MESSAGES.find((message) => {
+            const normalizedMessage = normalizeCompletionText(message);
+            return normalizedMessage.startsWith(normalizedCurrent) && normalizedMessage !== normalizedCurrent;
+        }) || "";
+    }
+
+    function normalizeCompletionText(value) {
+        return String(value || "").replace(/\s+/g, "");
     }
 
     function closeChrome() {
