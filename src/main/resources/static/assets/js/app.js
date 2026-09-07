@@ -253,57 +253,113 @@
     function renderHome() {
         app.innerHTML = `
             <section class="home-workbench">
-                <div class="section home-primary">
-                    <div class="page-title">
-                        <div>
-                            <p class="eyebrow">今日推荐</p>
-                            <h1>今天想吃什么？</h1>
-                            <p>说出时间、心情、口味或健康目标，助手会补齐关键信息，再给出可解释推荐。</p>
-                        </div>
-                        <div class="home-kcal" aria-label="当前推荐上下文">
-                            <span>体验用户</span>
-                            <strong>${escapeHtml(DietApi.getUserId())}</strong>
-                            <small>X-User-Id</small>
-                        </div>
+                <div class="home-hero-card">
+                    <div class="hero-copy">
+                        <p class="eyebrow">AI Meal Planner</p>
+                        <h1>把今天这顿饭，拆成可推荐的条件。</h1>
+                        <p>输入时间、心情、场景、口味或健康目标，系统先补齐关键槽位，再从个人库或公共库里给出可解释推荐。</p>
                     </div>
 
-                    <div class="summary-strip" aria-label="餐食库概览">
-                        ${summaryItem("个人库", homeStatValue("personal"), "用于 PERSONAL 推荐")}
-                        ${summaryItem("公共库", homeStatValue("public"), "用于快速体验")}
-                        ${summaryItem("反馈闭环", "可用", "推荐结果可继续反馈")}
+                    <div class="meal-command-card" aria-label="推荐输入示例">
+                        <div class="command-topline">
+                            <span class="status-dot"></span>
+                            <span>推荐需求</span>
+                            <strong>${state.chat.sourceMode === "PERSONAL" ? "个人库" : "公共库"}</strong>
+                        </div>
+                        <p>今晚想吃清淡低脂的，最好热乎一点，不要太麻烦。</p>
+                        <div class="chips">
+                            ${quickPromptPills(["晚饭", "清淡", "低脂", "热乎", "快手"])}
+                        </div>
                     </div>
 
                     <div class="hero-actions">
-                        <a class="btn primary" href="#/diet/chat">开始推荐</a>
-                        <a class="btn ghost" href="#/diet/meals/personal">维护我的餐食</a>
-                        <a class="btn ghost" href="#/diet/meals/public">查看公共餐食</a>
+                        <a class="btn primary large" href="#/diet/chat">开始推荐</a>
+                        <a class="btn soft large" href="#/diet/meals/personal">维护我的餐食</a>
+                        <a class="btn ghost large" href="#/admin/traces">查看 Trace</a>
                     </div>
                 </div>
 
-                <aside class="grid stats">
-                    <div class="section home-flow">
-                        <h2>推荐流程</h2>
-                        ${stepCard("1", "说需求", "描述这一餐的基本想法。")}
-                        ${stepCard("2", "补条件", "缺少关键槽位时先追问。")}
-                        ${stepCard("3", "给推荐", "展示餐食并接收反馈。")}
-                    </div>
-                    <div class="section home-dev">
-                        <h2>研发工具</h2>
-                        <p class="muted">Trace 与评估功能仍保留，用于排查和迭代。</p>
-                        <div class="button-row">
-                            <a class="btn ghost compact" href="#/admin/traces">Trace</a>
-                            <a class="btn ghost compact" href="#/admin/evaluations">评估</a>
+                <aside class="home-side-panel">
+                    <div class="home-ring-card">
+                        <div class="home-ring" aria-hidden="true">
+                            <span>DA</span>
                         </div>
+                        <div>
+                            <p class="eyebrow">当前体验用户</p>
+                            <strong>${escapeHtml(DietApi.getUserId())}</strong>
+                            <p class="muted small">所有请求会带上 X-User-Id，用于跨会话个性化体验。</p>
+                        </div>
+                    </div>
+
+                    <div class="summary-strip vertical" aria-label="餐食库概览">
+                        ${summaryItem("个人库", homeStatValue("personal"), "PERSONAL 推荐")}
+                        ${summaryItem("公共库", homeStatValue("public"), "PUBLIC 兜底体验")}
+                        ${summaryItem("反馈闭环", "可用", "推荐结果可继续反馈")}
                     </div>
                 </aside>
             </section>
-            <section class="grid three home-feature-grid">
-                ${featureCard("聊天推荐", "按自然语言表达需求，页面会展示澄清、推荐和反馈状态。", "#/diet/chat")}
-                ${featureCard("我的餐食", "维护常吃餐食和标签，让 PERSONAL 模式更贴近个人偏好。", "#/diet/meals/personal")}
-                ${featureCard("研发工具", "Trace 与批量评估保留在研发入口，用于排查和迭代。", "#/admin/traces")}
+
+            <section class="home-lower-grid">
+                <div class="section home-flow">
+                    <div class="card-title">
+                        <div>
+                            <p class="eyebrow">Recommendation Flow</p>
+                            <h2>推荐链路</h2>
+                        </div>
+                    </div>
+                    <div class="flow-track">
+                        ${flowItem("01", "识别需求", "把自然语言拆成时间、场景、心情、口味、健康目标等槽位。")}
+                        ${flowItem("02", "缺口追问", "信息不足时先澄清，避免直接给出低质量推荐。")}
+                        ${flowItem("03", "排序推荐", "结合餐食库标签和用户反馈，输出可解释候选。")}
+                    </div>
+                </div>
+
+                <div class="section home-dev">
+                    <div class="card-title">
+                        <div>
+                            <p class="eyebrow">Debug & Evaluation</p>
+                            <h2>研发工具</h2>
+                        </div>
+                    </div>
+                    <p class="muted">Trace 与批量评估入口继续保留，用于排查一次请求里每个 Agent 节点的输入、输出和耗时。</p>
+                    <div class="button-row">
+                        <a class="btn ghost compact" href="#/admin/traces">Trace 排查</a>
+                        <a class="btn ghost compact" href="#/admin/evaluations">批量评估</a>
+                    </div>
+                </div>
+
+                <div class="section home-library-card">
+                    <div class="card-title">
+                        <div>
+                            <p class="eyebrow">Meal Library</p>
+                            <h2>餐食库</h2>
+                        </div>
+                    </div>
+                    <p class="muted">保留个人库维护和公共库浏览；推荐失败时也能直接检查候选数据是否足够。</p>
+                    <div class="button-row">
+                        <a class="btn soft compact" href="#/diet/meals/personal">我的餐食</a>
+                        <a class="btn ghost compact" href="#/diet/meals/public">公共餐食</a>
+                    </div>
+                </div>
             </section>
         `;
         loadHomeStats();
+    }
+
+    function quickPromptPills(items) {
+        return items.map((item) => `<span class="chip selected">${escapeHtml(item)}</span>`).join("");
+    }
+
+    function flowItem(index, title, desc) {
+        return `
+            <div class="flow-item">
+                <span>${escapeHtml(index)}</span>
+                <div>
+                    <strong>${escapeHtml(title)}</strong>
+                    <p>${escapeHtml(desc)}</p>
+                </div>
+            </div>
+        `;
     }
 
     function summaryItem(label, value, desc) {
@@ -416,11 +472,11 @@
 
     function renderChatHeader() {
         return `
-            <div class="page-title">
+            <div class="page-title chat-hero-bar">
                 <div>
                     <p class="eyebrow">聊天推荐</p>
-                    <h1>把需求说出来，推荐结果跟着收敛</h1>
-                    <p>当前会话：${state.chat.sessionId ? "已创建" : "发送消息时自动创建"}</p>
+                    <h1>说出这一餐的偏好，系统按槽位收敛推荐。</h1>
+                    <p>当前会话：${state.chat.sessionId ? `#${state.chat.sessionId}` : "发送消息时自动创建"}</p>
                 </div>
                 <div class="chat-controls">
                     <div class="segmented" role="radiogroup" aria-label="推荐数据源">
